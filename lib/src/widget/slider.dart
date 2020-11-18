@@ -107,6 +107,7 @@ class NeumorphicSlider extends StatefulWidget {
   final double value;
   final double max;
   final double height;
+  final EdgeInsets padding;
   final NeumorphicSliderListener onChanged;
   final NeumorphicSliderListener onChangeStart;
   final NeumorphicSliderListener onChangeEnd;
@@ -121,6 +122,7 @@ class NeumorphicSlider extends StatefulWidget {
     this.value = 0,
     this.max = 10,
     this.height = 15,
+    this.padding,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
@@ -172,7 +174,8 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
       alignment: Alignment.center,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: thumbSize / 2, right: thumbSize / 2),
+          padding: widget.padding ??
+              EdgeInsets.only(left: thumbSize / 2, right: thumbSize / 2),
           child: _generateSlider(context),
         ),
         Align(
