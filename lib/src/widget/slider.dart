@@ -108,6 +108,11 @@ class NeumorphicSlider extends StatefulWidget {
   final double max;
   final double height;
   final EdgeInsets padding;
+  /// Used to calculate division count from [max ~/ divisionsCalc]
+  final double divisionsCalc;
+  final double divisionsCount;
+  final Widget divisionWidget;
+  final Widget customDivision;
   final NeumorphicSliderListener onChanged;
   final NeumorphicSliderListener onChangeStart;
   final NeumorphicSliderListener onChangeEnd;
@@ -123,6 +128,10 @@ class NeumorphicSlider extends StatefulWidget {
     this.max = 10,
     this.height = 15,
     this.padding,
+    this.divisionsCalc,
+    this.divisionsCount,
+    this.divisionWidget,
+    this.customDivision,
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
@@ -178,6 +187,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
               EdgeInsets.only(left: thumbSize / 2, right: thumbSize / 2),
           child: _generateSlider(context),
         ),
+        _generateDivisions(context),
         Align(
             alignment: Alignment(
                 //because left = -1 & right = 1, so the "width" = 2, and minValue = 1
@@ -185,6 +195,35 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
                 0),
             child: widget.thumb ?? _generateThumb(context, thumbSize))
       ],
+    );
+  }
+
+  Widget _generateDivisions(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
+    int _divisionCount = widget.divisionsCount != null
+        ? widget.divisionsCount.toInt()
+        : widget.divisionsCalc != null
+            ? widget.max ~/ widget.divisionsCalc
+            : 0;
+    return SizedBox(
+      height: widget.height,
+      child: widget.customDivision ??
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List<Widget>.generate(
+              _divisionCount,
+              (index) =>
+                  widget.divisionWidget ??
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: theme.variantColor,
+                    ),
+                    width: 5,
+                    height: 5,
+                  ),
+            ),
+          ),
     );
   }
 
